@@ -26,12 +26,19 @@ class GraphTesting(unittest.TestCase):
     import solver.cf as cf
     header, rows = cf.prepare_cf(tmpgraph.name)
 
-    os.remove(tmpgraph.name)
-
     def test_cf(self):
         self.assertEqual("p cnf 3 2\n", self.header)
         self.assertEqual("-1 -2 0\n", self.rows[0])
         self.assertEqual("-2 -3 0\n", self.rows[1])
+
+    import solver.isolver as isolver
+    sol_pos, sol_neg = isolver.solve(tmpgraph.name + ".cf")
+
+    def test_isolver(self):
+        self.assertEqual([1, 3], self.sol_pos)
+        self.assertEqual([2], self.sol_neg)
+
+    os.remove(tmpgraph.name)
 
 
 if __name__ == '__main__':
