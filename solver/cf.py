@@ -19,7 +19,3 @@ def prepare_cf(path):
 def solve(path):
     path_cf, _, _ = prepare_cf(path)
     yield from idecoder.decode_all(isolver.solve_all(path_cf), path)
-
-
-if __name__ == '__main__':
-    prepare_cf(sys.argv[1])
