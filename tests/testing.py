@@ -24,7 +24,7 @@ class Testing(unittest.TestCase):
         self.assertEqual((self.pre, self.suc), ({1: set(), 2: {1}, 3: {2}}, {1: {2}, 2: {3}, 3: set()}))
 
     import solver.cf as cf
-    path_cf, header, rows = cf.prepare_cf(tmpgraph.name)
+    path_cf, header, rows = cf.prepare(tmpgraph.name)
 
     def test_cf(self):
         self.assertEqual("p cnf 3 2\n", self.header)

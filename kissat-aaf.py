@@ -1,7 +1,7 @@
 import os
 from sys import argv, exit
 
-from solver import cf
+from solver import cf, adm
 
 extensions = ('cf', 'adm', 'cmp', 'grd', 'prf', 'stb')
 
@@ -24,6 +24,9 @@ def main():
 
     if extension == 'cf':
         for sol in cf.solve(path):
+            print('{' + " ".join(sol) + '}')
+    if extension == 'adm':
+        for sol in adm.solve(path):
             print('{' + " ".join(sol) + '}')
 
 
