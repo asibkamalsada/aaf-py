@@ -1,6 +1,6 @@
 import sys
 
-from solver import isolver
+from solver import isolver, idecoder
 from solver.tools import *
 import graph
 
@@ -18,7 +18,7 @@ def prepare_cf(path):
 
 def solve(path):
     path_cf, _, _ = prepare_cf(path)
-    yield from isolver.solve_all(path_cf)
+    yield from idecoder.decode_all(isolver.solve_all(path_cf), path)
 
 
 if __name__ == '__main__':

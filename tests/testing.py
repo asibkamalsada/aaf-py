@@ -47,11 +47,7 @@ class Testing(unittest.TestCase):
     def test_solve_all(self):
         self.assertEqual(self.cf_sol_expected, self.all_sol)
 
-    cf_sol_actual = list(cf.solve(tmpgraph.name))
-    cf_sol_actual.sort()
-
-    def test_cf_solve_all(self):
-        self.assertEqual(self.cf_sol_expected, self.cf_sol_actual)
+    cf_sol_actual = frozenset(cf.solve(tmpgraph.name))
 
     import solver.idecoder as idecoder
 
@@ -67,6 +63,9 @@ class Testing(unittest.TestCase):
 
     def test_decode_all(self):
         self.assertEqual(self.dec_all_expected, self.dec_all_actual)
+
+    def test_cf_solve_all(self):
+        self.assertEqual(self.dec_all_expected, self.cf_sol_actual)
 
     os.remove(tmpgraph.name)
 
