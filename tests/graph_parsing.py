@@ -24,7 +24,7 @@ class GraphTesting(unittest.TestCase):
         self.assertEqual((self.pre, self.suc), ({1: set(), 2: {1}, 3: {2}}, {1: {2}, 2: {3}, 3: set()}))
 
     import solver.cf as cf
-    header, rows = cf.prepare_cf(tmpgraph.name)
+    path_cf, header, rows = cf.prepare_cf(tmpgraph.name)
 
     def test_cf(self):
         self.assertEqual("p cnf 3 2\n", self.header)
@@ -32,19 +32,26 @@ class GraphTesting(unittest.TestCase):
         self.assertEqual("-2 -3 0\n", self.rows[1])
 
     import solver.isolver as isolver
-    sol_pos, sol_neg = isolver.solve(tmpgraph.name + ".cf")
+    sol_pos, sol_neg = isolver.solve(path_cf)
 
     def test_isolver(self):
         self.assertEqual([1, 3], self.sol_pos)
         self.assertEqual([2], self.sol_neg)
 
-    all_sol = list(isolver.solve_all(tmpgraph.name + ".cf"))
+    all_sol = list(isolver.solve_all(path_cf))
     all_sol.sort()
 
+    sol = [([1, 3], [2]), ([3], [1, 2]), ([], [1, 2, 3]), ([1], [2, 3]), ([2], [1, 3])]
+    sol.sort()
+
     def test_solve_all(self):
-        sol = [([1, 3], [2]), ([3], [1, 2]), ([], [1, 2, 3]), ([1], [2, 3]), ([2], [1, 3])]
-        sol.sort()
-        self.assertEqual(sol, self.all_sol)
+        self.assertEqual(self.sol, self.all_sol)
+
+    cf_sol = list(cf.solve(tmpgraph.name))
+    cf_sol.sort()
+
+    def test_cf_solve_all(self):
+        self.assertEqual(self.sol, self.cf_sol)
 
     os.remove(tmpgraph.name)
 
