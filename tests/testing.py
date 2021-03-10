@@ -3,7 +3,7 @@ import tempfile
 import unittest
 
 
-class GraphTesting(unittest.TestCase):
+class Testing(unittest.TestCase):
     import graph
     samplegraph = "arg(a1)." \
                   "arg(a2)." \
@@ -41,17 +41,32 @@ class GraphTesting(unittest.TestCase):
     all_sol = list(isolver.solve_all(path_cf))
     all_sol.sort()
 
-    sol = [([1, 3], [2]), ([3], [1, 2]), ([], [1, 2, 3]), ([1], [2, 3]), ([2], [1, 3])]
-    sol.sort()
+    cf_sol_expected = [([1, 3], [2]), ([3], [1, 2]), ([], [1, 2, 3]), ([1], [2, 3]), ([2], [1, 3])]
+    cf_sol_expected.sort()
 
     def test_solve_all(self):
-        self.assertEqual(self.sol, self.all_sol)
+        self.assertEqual(self.cf_sol_expected, self.all_sol)
 
-    cf_sol = list(cf.solve(tmpgraph.name))
-    cf_sol.sort()
+    cf_sol_actual = list(cf.solve(tmpgraph.name))
+    cf_sol_actual.sort()
 
     def test_cf_solve_all(self):
-        self.assertEqual(self.sol, self.cf_sol)
+        self.assertEqual(self.cf_sol_expected, self.cf_sol_actual)
+
+    import solver.idecoder as idecoder
+
+    dec_expected = frozenset(('a1', 'a3'))
+    dec_actual = idecoder.decode([1, 3], {1: 'a1', 2: 'a2', 3: 'a3'})
+
+    def test_decode(self):
+        self.assertEqual(self.dec_expected, self.dec_actual)
+
+    dec_all_expected = frozenset({frozenset(['a1', 'a3']), frozenset(['a3']), frozenset([]), frozenset(['a1']), frozenset(['a2'])})
+
+    dec_all_actual = frozenset(idecoder.decode_all(cf_sol_expected, tmpgraph.name))
+
+    def test_decode_all(self):
+        self.assertEqual(self.dec_all_expected, self.dec_all_actual)
 
     os.remove(tmpgraph.name)
 

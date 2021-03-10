@@ -6,14 +6,21 @@ edge_re = re.compile(r'att\(([^,\s]+?),([^,\s]+?)\)\.')
 
 
 def parse_graph(path):
-    with open(path, "r") as f:
-        content = f.read()
-    if content:
-        args = (arg[1] for arg in arg_re.finditer(content))
+    args, content = getargs(path)
+    if args:
         for n, arg in enumerate(args, start=1):
             content = content.replace(arg, str(n))
         edges = [(int(edge[1]), int(edge[2])) for edge in edge_re.finditer(content)]
         return n, edges
+
+
+def getargs(path):
+    with open(path, "r") as f:
+        content = f.read()
+    if content:
+        return (arg[1] for arg in arg_re.finditer(content)), content
+    else:
+        return None, None
 
 
 def pre_suc(args, edges):
