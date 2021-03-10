@@ -14,5 +14,14 @@ def parse_graph(path):
         return args, edges
 
 
+def pre_suc(args, edges):
+    pre = {arg: set() for arg in args}
+    suc = {arg: set() for arg in args}
+    for a1, a2 in edges:
+        pre[a2].add(a1)
+        suc[a1].add(a2)
+    return pre, suc
+
+
 if __name__ == '__main__':
     parse_graph(sys.argv[1])
