@@ -38,6 +38,14 @@ class GraphTesting(unittest.TestCase):
         self.assertEqual([1, 3], self.sol_pos)
         self.assertEqual([2], self.sol_neg)
 
+    all_sol = list(isolver.solve_all(tmpgraph.name + ".cf"))
+    all_sol.sort()
+
+    def test_solve_all(self):
+        sol = [([1, 3], [2]), ([3], [1, 2]), ([], [1, 2, 3]), ([1], [2, 3]), ([2], [1, 3])]
+        sol.sort()
+        self.assertEqual(sol, self.all_sol)
+
     os.remove(tmpgraph.name)
 
 

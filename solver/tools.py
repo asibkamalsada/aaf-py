@@ -15,3 +15,7 @@ def getrow(pos, neg):
             return f'{negs} 0\n'
         else:
             return f'0\n'
+
+
+def negate(pos, neg):
+    return getrow(neg, pos)

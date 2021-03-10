@@ -1,5 +1,8 @@
 import re
 import subprocess
+import tempfile
+
+from solver import tools
 
 kissat = r'C:\Users\asib1\Documents\Asib\repos\aaf-py\solver\kissat.exe'
 
@@ -12,11 +15,22 @@ neg_pattern = re.compile(r"(?<=-)\d+")
 
 
 def solve_all(path):
-    pass
+    with tempfile.NamedTemporaryFile(mode="w", delete=False) as tmpsol:
+        with open(path, "r") as origin:
+            tmpsol.write(origin.read())
+    while True:
+        sol = solve(tmpsol.name)
+        if not sol:
+            break
+        pos, neg = sol
+        yield pos, neg
+        assumption = tools.negate(pos, neg)
+        with open(tmpsol.name, "a") as oldsol:
+            oldsol.write(assumption)
 
 
 def solve(path):
-    prc = subprocess.run([kissat, path], stdout=subprocess.PIPE, encoding='utf-8')
+    prc = subprocess.run([kissat, path, '--relaxed'], stdout=subprocess.PIPE, encoding='utf-8')
     if prc.returncode == SAT:
         m = sol_pattern.search(prc.stdout)
         return interpret_sol(m[1])
