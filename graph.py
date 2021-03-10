@@ -13,12 +13,12 @@ def parse_graph(path):
         for n, arg in enumerate(args, start=1):
             content = content.replace(arg, str(n))
         edges = [(int(edge[1]), int(edge[2])) for edge in edge_re.finditer(content)]
-        return list(range(1, n+1)), edges
+        return n, edges
 
 
 def pre_suc(args, edges):
-    pre = {arg: set() for arg in args}
-    suc = {arg: set() for arg in args}
+    pre = {arg: set() for arg in range(1, args + 1)}
+    suc = {arg: set() for arg in range(1, args + 1)}
     for a1, a2 in edges:
         pre[a2].add(a1)
         suc[a1].add(a2)

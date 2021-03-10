@@ -18,7 +18,7 @@ class GraphTesting(unittest.TestCase):
     os.remove(tmpgraph.name)
 
     def test_parsing(self):
-        self.assertEqual((self.args, self.edges), ([1, 2, 3], [(1, 2), (2, 3)]))
+        self.assertEqual((self.args, self.edges), (3, [(1, 2), (2, 3)]))
 
     pre, suc = graph.pre_suc(args, edges)
 
