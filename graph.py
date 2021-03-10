@@ -9,9 +9,11 @@ def parse_graph(path):
     with open(path, "r") as f:
         content = f.read()
     if content:
-        args = [arg[1] for arg in arg_re.finditer(content)]
-        edges = [(edge[1], edge[2]) for edge in edge_re.finditer(content)]
-        return args, edges
+        args = (arg[1] for arg in arg_re.finditer(content))
+        for n, arg in enumerate(args, start=1):
+            content = content.replace(arg, str(n))
+        edges = [(int(edge[1]), int(edge[2])) for edge in edge_re.finditer(content)]
+        return list(range(1, n+1)), edges
 
 
 def pre_suc(args, edges):
