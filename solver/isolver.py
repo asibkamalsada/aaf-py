@@ -9,12 +9,16 @@ SAT = 10
 UNSAT = 20
 
 sol_pattern = re.compile(r"^v (.+?) 0", flags=re.MULTILINE)
-pos_pattern = re.compile(r"(?<!-)\d+|(?<=^)\d+")
+pos_pattern = re.compile(r"(?<![-\d])\d+|(?<=^)\d+")
 neg_pattern = re.compile(r"(?<=-)\d+")
 
 
-def solve_all(cnf):
+def solve_all(cnf, external_assumptions=None):
     while True:
+        if external_assumptions is not None:
+            for external_assumption in external_assumptions:
+                cnf += external_assumption
+            external_assumptions.clear()
         sol = solve(cnf)
         if not sol:
             break
@@ -34,8 +38,8 @@ def solve(cnf):
 
 
 def interpret_sol(sol_s):
-    pos = [int(literal) for literal in pos_pattern.findall(sol_s)]
-    neg = [int(literal) for literal in neg_pattern.findall(sol_s)]
+    pos = tuple(int(literal) for literal in pos_pattern.findall(sol_s))
+    neg = tuple(int(literal) for literal in neg_pattern.findall(sol_s))
     return pos, neg
 
 

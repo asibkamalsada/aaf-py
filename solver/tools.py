@@ -19,3 +19,9 @@ def getrow(pos, neg):
 
 def negate(pos, neg):
     return getrow(neg, pos)
+
+
+def yield_additional(it, add):
+    yield add
+    yield from it
+

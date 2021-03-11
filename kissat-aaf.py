@@ -1,7 +1,7 @@
 import os
 from sys import argv, exit
 
-from solver import cf, adm, stb
+from solver import cf, adm, stb, cmp
 
 extensions = ('cf', 'adm', 'cmp', 'grd', 'prf', 'stb')
 
@@ -28,6 +28,8 @@ def main():
         print_sols(adm.solve_adm(path))
     if extension == 'stb':
         print_sols(stb.solve_stb(path))
+    if extension == 'cmp':
+        print_sols(cmp.solve_cmp(path))
 
 
 def print_sols(sols):
