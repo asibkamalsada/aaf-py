@@ -18,7 +18,6 @@ def prepare_stb(path):
 
 def getrows(args, pre):
     for arg in range(1, args + 1):
-        pos = pre[arg]
         yield getrow(pos=yield_additional(pre[arg], arg), neg=())
 
 
