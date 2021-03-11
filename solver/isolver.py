@@ -15,22 +15,20 @@ neg_pattern = re.compile(r"(?<=-)\d+")
 
 
 def solve_all(path):
-    with tempfile.NamedTemporaryFile(mode="w", delete=False) as tmpsol:
-        with open(path, "r") as origin:
-            tmpsol.write(origin.read())
+    with open(path, "r") as origin:
+        cnf = origin.read()
     while True:
-        sol = solve(tmpsol.name)
+        sol = solve(cnf)
         if not sol:
             break
         pos, neg = sol
         yield pos, neg
         assumption = tools.negate(pos, neg)
-        with open(tmpsol.name, "a") as oldsol:
-            oldsol.write(assumption)
+        cnf += assumption
 
 
-def solve(path):
-    prc = subprocess.run([kissat, path, '--relaxed'], stdout=subprocess.PIPE, encoding='utf-8')
+def solve(cnf):
+    prc = subprocess.run([kissat, '--relaxed'], stdout=subprocess.PIPE, input=cnf, encoding='utf-8')
     if prc.returncode == SAT:
         m = sol_pattern.search(prc.stdout)
         return interpret_sol(m[1])
