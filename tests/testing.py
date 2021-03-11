@@ -24,21 +24,25 @@ class Testing(unittest.TestCase):
         self.assertEqual((self.pre, self.suc), ({1: set(), 2: {1}, 3: {2}}, {1: {2}, 2: {3}, 3: set()}))
 
     import solver.cf as cf
-    path_cf, header, rows = cf.prepare(tmpgraph.name)
+    cnf_cf = cf.prepare_cf(tmpgraph.name)
+
+    import solver.tools as tools
+
+    header = tools.getheader(args, len(edges))
+    rows = cf.getrows_cf(edges)
 
     def test_cf(self):
         self.assertEqual("p cnf 3 2\n", self.header)
-        self.assertEqual("-1 -2 0\n", self.rows[0])
-        self.assertEqual("-2 -3 0\n", self.rows[1])
+        self.assertEqual("-1 -2 0\n-2 -3 0\n", self.rows)
 
     import solver.isolver as isolver
-    sol_pos, sol_neg = isolver.solve(path_cf)
+    sol_pos, sol_neg = isolver.solve(cnf_cf)
 
     def test_isolver(self):
         self.assertEqual([1, 3], self.sol_pos)
         self.assertEqual([2], self.sol_neg)
 
-    all_sol = list(isolver.solve_all(path_cf))
+    all_sol = list(isolver.solve_all(cnf_cf))
     all_sol.sort()
 
     cf_sol_expected = [([1, 3], [2]), ([3], [1, 2]), ([], [1, 2, 3]), ([1], [2, 3]), ([2], [1, 3])]
@@ -47,7 +51,7 @@ class Testing(unittest.TestCase):
     def test_solve_all(self):
         self.assertEqual(self.cf_sol_expected, self.all_sol)
 
-    cf_sol_actual = frozenset(cf.solve(tmpgraph.name))
+    cf_sol_actual = frozenset(cf.solve_cf(tmpgraph.name))
 
     import solver.idecoder as idecoder
 

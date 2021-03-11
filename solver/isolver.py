@@ -1,6 +1,5 @@
 import re
 import subprocess
-import tempfile
 
 from solver import tools
 
@@ -14,9 +13,7 @@ pos_pattern = re.compile(r"(?<!-)\d+|(?<=^)\d+")
 neg_pattern = re.compile(r"(?<=-)\d+")
 
 
-def solve_all(path):
-    with open(path, "r") as origin:
-        cnf = origin.read()
+def solve_all(cnf):
     while True:
         sol = solve(cnf)
         if not sol:

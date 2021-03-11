@@ -1,23 +1,15 @@
-from solver import isolver, idecoder
-from solver.tools import *
+from solver import isolver, idecoder, tools
 import graph
 
 
-def prepare(path):
-    header, rows = head_rows(*graph.parse_graph(path))
-    path_cf = path + ".cf"
-    with open(path_cf, "w") as cf_dimacs:
-        cf_dimacs.write(header)
-        cf_dimacs.writelines(rows)
-    return path_cf, header, rows
+def prepare_cf(path):
+    args, edges = graph.parse_graph(path)
+    return f'{tools.getheader(args, len(edges))}{getrows_cf(edges)}'
 
 
-def head_rows(args, edges):
-    header = getheader(args, len(edges))
-    rows = [getrow(pos=(), neg=(a1, a2)) for (a1, a2) in edges]
-    return header, rows
+def getrows_cf(edges):
+    return "".join(tools.getrow(pos=(), neg=(a1, a2)) for (a1, a2) in edges)
 
 
-def solve(path):
-    path_cf, _, _ = prepare(path)
-    yield from idecoder.decode_all(isolver.solve_all(path_cf), path)
+def solve_cf(path):
+    yield from idecoder.decode_all(isolver.solve_all(prepare_cf(path)), path)

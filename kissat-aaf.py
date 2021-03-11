@@ -23,11 +23,11 @@ def main():
         exit(1)
 
     if extension == 'cf':
-        print_sols(cf.solve(path))
+        print_sols(cf.solve_cf(path))
     if extension == 'adm':
-        print_sols(adm.solve(path))
+        print_sols(adm.solve_adm(path))
     if extension == 'stb':
-        print_sols(stb.solve(path))
+        print_sols(stb.solve_stb(path))
 
 
 def print_sols(sols):

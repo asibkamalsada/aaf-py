@@ -1,24 +1,18 @@
-from solver import isolver, idecoder, cf
-from solver.tools import *
+from solver import isolver, idecoder, cf, tools
 import graph
 
 
 def prepare_stb(path):
     args, edges = graph.parse_graph(path)
     pre, suc = graph.pre_suc(args, edges)
-    header = getheader(args, len(edges) + args)
-    _, cf_rows = cf.head_rows(args, edges)
-    path_stb = path + ".stb"
-    with open(path_stb, "w") as stb_dimacs:
-        stb_dimacs.write(header)
-        stb_dimacs.writelines(cf_rows)
-        stb_dimacs.writelines(getrows(args, pre))
-    return path_stb
+    header = tools.getheader(args, len(edges) + args)
+    cf_rows = cf.getrows_cf(edges)
+    stb_rows = "".join(getrows_stb(args, pre))
+    return f'{header}{cf_rows}{stb_rows}'
 
 
-def getrows(args, pre):
-    for arg in range(1, args + 1):
-        yield getrow(pos=yield_additional(pre[arg], arg), neg=())
+def getrows_stb(args, pre):
+    yield from (tools.getrow(pos=yield_additional(pre[arg], arg), neg=()) for arg in range(1, args + 1))
 
 
 def yield_additional(it, add):
@@ -26,6 +20,6 @@ def yield_additional(it, add):
     yield from it
 
 
-def solve(path):
+def solve_stb(path):
     path_stb = prepare_stb(path)
     yield from idecoder.decode_all(isolver.solve_all(path_stb), path)
