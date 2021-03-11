@@ -24,13 +24,16 @@ def substitutions(args, pre):
     return "".join(tools.getrow(pos=tools.yield_additional(pre[b], b + args), neg=()) for b in range(1, args + 1))
 
 
-def solve_cmp(path):
+def solve_cmp(path, external_assumptions=None):
+    if external_assumptions is None:
+        external_assumptions = set()
+
     cmp_cnf, args, pre = prepare_cmp(path)
-    assumptions = set()
     lookup = idecoder.getlookup(path)
-    for (pos, neg) in isolver.solve_all(cmp_cnf, assumptions):
+
+    for (pos, neg) in isolver.solve_all(cmp_cnf, external_assumptions):
         print(f'pos: {pos}, neg: {neg}')
         real_pos = tuple(lit for lit in pos if lit < args)
         if next((lit for lit in pos if lit >= args and pre[lit - args].intersection(real_pos)), None) is None:
-            assumptions.add(tools.negate(pos=real_pos, neg=()))
+            external_assumptions.add(tools.negate(pos=real_pos, neg=()))
             yield idecoder.decode(pos=real_pos, lookup=lookup)
