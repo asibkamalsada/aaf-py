@@ -1,15 +1,17 @@
 import os
 from sys import argv, exit
 
-from solver import cf, adm, stb, cmp
+from solver import cf, adm, stb, cmp, prf
 
 extensions = ('cf', 'adm', 'cmp', 'grd', 'prf', 'stb')
 
 
 def main():
-    if len(argv) != 3:
+    if len(argv) < 3:
         print("specify {extension} and {path to apx}")
         exit(1)
+
+    writeout = len(argv) == 4
 
     if argv[1] in extensions:
         extension = argv[1]
@@ -23,13 +25,15 @@ def main():
         exit(1)
 
     if extension == 'cf':
-        print_sols(cf.solve_cf(path))
+        print_sols(cf.solve_cf(path, writeout))
     if extension == 'adm':
-        print_sols(adm.solve_adm(path))
+        print_sols(adm.solve_adm(path, writeout))
     if extension == 'stb':
-        print_sols(stb.solve_stb(path))
+        print_sols(stb.solve_stb(path, writeout))
     if extension == 'cmp':
-        print_sols(cmp.solve_cmp(path))
+        print_sols(cmp.solve_cmp(path, writeout))
+    if extension == 'prf':
+        print_sols(prf.solve_prf(path, writeout))
 
 
 def print_sols(sols):

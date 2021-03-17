@@ -24,12 +24,15 @@ def solve_all(cnf, external_assumptions=None):
             break
         pos, neg = sol
         yield pos, neg
-        assumption = tools.negate(pos, neg)
+        assumption = tools.negate_clause(pos, neg)
         cnf += assumption
 
 
-def solve(cnf):
-    prc = subprocess.run([kissat, '--relaxed'], stdout=subprocess.PIPE, input=cnf, encoding='utf-8')
+def solve(cnf, relaxed=True):
+    if relaxed:
+        prc = subprocess.run([kissat, '--relaxed'], stdout=subprocess.PIPE, input=cnf, encoding='utf-8')
+    else:
+        prc = subprocess.run(kissat, stdout=subprocess.PIPE, input=cnf, encoding='utf-8')
     if prc.returncode == SAT:
         m = sol_pattern.search(prc.stdout)
         return interpret_sol(m[1])

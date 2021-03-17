@@ -15,5 +15,9 @@ def getrows_adm(args, pre):
     return "".join(tools.getrow(pre[attacker], (arg,)) for arg in range(1, args + 1) for attacker in pre[arg])
 
 
-def solve_adm(path):
-    yield from idecoder.decode_all(isolver.solve_all(prepare_adm(path)), path)
+def solve_adm(path, writeout):
+    cnf_adm = prepare_adm(path)
+    if writeout:
+        with open(path + ".adm", "w+") as outt:
+            outt.write(cnf_adm)
+    yield from idecoder.decode_all(isolver.solve_all(cnf_adm), path)

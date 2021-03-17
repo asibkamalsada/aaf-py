@@ -12,9 +12,12 @@ def prepare_stb(path):
 
 
 def getrows_stb(args, pre):
-    yield from (tools.getrow(pos=tools.yield_additional(pre[arg], arg), neg=()) for arg in range(1, args + 1))
+    yield from (tools.getrow(pos=tools.yield_add(pre[arg], arg), neg=()) for arg in range(1, args + 1))
 
 
-def solve_stb(path):
+def solve_stb(path, writeout):
     cnf_stb = prepare_stb(path)
+    if writeout:
+        with open(path + ".stb", "w+") as outt:
+            outt.write(cnf_stb)
     yield from idecoder.decode_all(isolver.solve_all(cnf_stb), path)

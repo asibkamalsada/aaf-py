@@ -17,11 +17,14 @@ def getrow(pos, neg):
             return f'0\n'
 
 
-def negate(pos, neg):
+def negate_clause(pos, neg):
     return getrow(neg, pos)
 
 
-def yield_additional(it, add):
+def complement(pos, args):
+    return (i for i in range(1, args + 1) if i not in pos)
+
+
+def yield_add(it, add):
     yield add
     yield from it
-
